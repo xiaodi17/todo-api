@@ -1,20 +1,14 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 as build
 WORKDIR /app
+COPY ./*.csproj .
+RUN dotnet restore
+
+COPY ./ ./
+ARG VERSION
+RUN dotnet publish -c Release -o ./out/ 
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 EXPOSE 80
-EXPOSE 443
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["src/Todo.Api/Todo.Api.csproj", "Todo.Api/"]
-RUN dotnet restore "src/Todo.Api/Todo.Api.csproj"
-COPY . .
-WORKDIR "/src/Todo.Api"
-RUN dotnet build "Todo.Api.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "Todo.Api.csproj" -c Release -o /app/publish
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/out/ .
 ENTRYPOINT ["dotnet", "Todo.Api.dll"]
