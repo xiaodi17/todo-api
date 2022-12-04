@@ -12,14 +12,14 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog((ctx, lc) => lc
-    .WriteTo.Console());
 
 // Add services to the container.
 
 builder.Services.AddSingleton(Log.Logger);
 DefaultTypeMap.MatchNamesWithUnderscores = true;
-// builder.Services.AddSingleton(DatabaseConfiguration.Create(app.Configuration));
+builder.Services.AddSingleton(DatabaseConfiguration.Create(builder.Configuration));
+builder.Services.AddSingleton<TodoDatabase>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,12 +27,10 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseSerilogRequestLogging();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
