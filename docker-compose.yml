@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  database:
+    image: postgres:11.6
+    command: postgres -c 'max_connections=200'
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
