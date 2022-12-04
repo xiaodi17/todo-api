@@ -1,0 +1,48 @@
+name: Build, Test and Deploy
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+
+jobs:
+  set-env:
+    name: Set environment variables
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout out code
+        uses: actions/checkout@v2
+
+      - name: Read environment variables from .env file
+        id: dotenv
+        uses: falti/dotenv-action@v0.2.5
+        with:
+          log-variables: true
+
+      - name: Set branch name
+        run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Set url
+        run: echo "$(([ github.ref == 'refs/heads/main' ]) && (echo url='${{ steps.dotenv.outputs.url }}/') || (echo url='${{ steps.dotenv.outputs.url }}-${{ env.branch }}/'))" >> $GITHUB_ENV
+
+    outputs:
+      project: ${{ steps.dotenv.outputs.project }}
+      api_project: ${{ steps.dotenv.outputs.api_project }}
+      team: ${{ steps.dotenv.outputs.team }}
+      url: ${{ env.url }}
+
+  build:
+    name: Build and Test
+    needs: [set-env]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout out code
+        uses: actions/checkout@v2
+
+      - name: Run build.sh
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
+        working-directory: ./build
+        env:
+          GIT_SHA: ${{ github.sha }}
+          VERSION: ${{ format('2.0.1.{0}', github.run_number) }}
+          PROJECT: ${{ needs.set-env.outputs.project }}
+          API_PROJECT: ${{ needs.set-env.outputs.api_project }}
