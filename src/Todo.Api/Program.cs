@@ -27,6 +27,9 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.Services
+    .GetRequiredService<TodoDatabase>()
+    .UpgradeIfNecessary();
 
 app.UseSwagger();
 app.UseSwaggerUI();
