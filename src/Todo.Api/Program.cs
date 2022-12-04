@@ -3,6 +3,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
 using Todo.Api.Databases;
+using Todo.Api.Features.Todo;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -19,6 +20,7 @@ builder.Services.AddSingleton(Log.Logger);
 DefaultTypeMap.MatchNamesWithUnderscores = true;
 builder.Services.AddSingleton(DatabaseConfiguration.Create(builder.Configuration));
 builder.Services.AddSingleton<TodoDatabase>();
+builder.Services.AddTodoFeature();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
