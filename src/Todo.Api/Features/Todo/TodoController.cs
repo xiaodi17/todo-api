@@ -30,14 +30,21 @@ public class TodoController : ControllerBase
         _todoService = todoService;
     }
 
+    /// <summary>
+    /// Get a list of todoitems with optional query filters
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("todoitems")]
-    public IEnumerable<TodoItem> Get()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IEnumerable<TodoItem>> Get([FromQuery] TodoItemsQuery query)
     {
-        return TodoItems;
+        var response = await _todoService.Get(query);
+        return response;
     }
     
     [HttpPost("todoitems")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
     public async Task<ActionResult<TodoItem>> Create([FromBody] CreateTodoItemRequest request)
     {

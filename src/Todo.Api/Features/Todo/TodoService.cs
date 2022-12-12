@@ -16,7 +16,6 @@ public class TodoService
 
     public async Task<TodoItem> Create(CreateTodoItemRequest createInstructionRequest)
     {
-
         var todoItem = new TodoItem
         {
             Id = Guid.NewGuid(),
@@ -24,15 +23,20 @@ public class TodoService
             IsComplete = createInstructionRequest.IsComplete
         };
         
-        
-
         await using var databaseConnection = await _todoDatabase.CreateAndOpenConnection();
-
         await _todoDatabase.ExecuteInTransaction(async (connection, transaction) =>
         {
             await _todoRepository.Create(todoItem, connection, transaction);
         });
 
         return todoItem;
+    }
+
+    public async Task<IEnumerable<TodoItem>> Get(TodoItemsQuery query)
+    {
+        await using var databaseConnection = await _todoDatabase.CreateAndOpenConnection();
+        var items = await _todoRepository.GetByParams(query, databaseConnection);
+
+        return items;
     }
 }

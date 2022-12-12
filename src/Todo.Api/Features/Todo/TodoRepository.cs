@@ -36,4 +36,23 @@ public class TodoRepository
             throw new DuplicateException(e);
         }
     }
+
+    public async Task<IEnumerable<TodoItem>> GetByParams(TodoItemsQuery query, DbConnection connection)
+    {
+        var dbRecords = await connection.QueryAsync<TodoItemDbRecord>(@"
+                select * from todo_items");
+        return dbRecords.Select(GetTodoItem);
+    }
+
+    private static TodoItem GetTodoItem(TodoItemDbRecord todoItemDbRecord)
+    {
+        var result = new TodoItem
+        {
+            Id = todoItemDbRecord.TodoId,
+            Name = todoItemDbRecord.Name,
+            IsComplete = todoItemDbRecord.IsComplete
+        };
+
+        return result;
+    }
 }
