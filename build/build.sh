@@ -27,9 +27,10 @@ docker-compose \
   -f ../docker-compose.yml \
   -f ../docker-compose.tests.yml \
   up \
-  --build --force-recreate --remove-orphans \
+  --force-recreate --remove-orphans \
   --exit-code-from tests \
   --abort-on-container-exit \
   tests
+  
 
 cleanup
