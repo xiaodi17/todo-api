@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -27,7 +26,7 @@ public class TestContext : IAsyncDisposable
 
     private Dictionary<string, string> GetSettings()
     {
-        var environment = Environment.GetEnvironmentVariable("IntegrationTestEnvironment");
+        var environment = GetEnvironment();
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appSettings.json")
