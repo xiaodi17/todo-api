@@ -9,7 +9,7 @@ docker-compose up -d
 ```
 Then run the app in your preferred IDE or using the cli...
 ```
-dotnet run --project ./src/CounterpartyInstructions.Api
+dotnet run --project ./src/Todo.Api
 ```
 
 
