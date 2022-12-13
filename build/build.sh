@@ -16,7 +16,7 @@ cleanup() {
 
 : ${GIT_SHA?"GIT_SHA env variable is required"}
 : ${VERSION?"VERSION env variable is required"}
-project="counterparty-instructions-api"
+project="todo-api"
 
 cleanup
 
