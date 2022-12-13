@@ -19,12 +19,7 @@ public class PostgresDatabase : IAsyncDisposable
     {
         _name = settings["DatabaseName"];
         _connectionString = $"Server={settings["DatabaseHost"]};User Id={settings["DatabaseUsername"]};Password={settings["DatabasePassword"]};";
-        
-    }
-    
-    public async Task Setup(CancellationToken cancellationToken)
-    {
-        await WaitTillReady(cancellationToken);
+        WaitTillReady();
         EnsureDatabase.For.PostgresqlDatabase(_connectionString + $"Database={_name}", new AutodetectUpgradeLog());
     }
 
@@ -42,21 +37,21 @@ public class PostgresDatabase : IAsyncDisposable
         await connection.ExecuteAsync($"drop database {_name}", connection);
     }
     
-    private async Task WaitTillReady(CancellationToken cancellationToken)
+    private void WaitTillReady()
     {
         for (var _ = 0; _ < 20; _++)
         {
             try
             {
-                await using var connection = new NpgsqlConnection(_connectionString);
-                await connection.OpenAsync(cancellationToken);
-                Log.Information("Database connection established.");
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+                Log.Logger.Information("Database connection established.");
                 return;
 
             }
             catch (Exception ex)
             {
-                Log.Information("Waiting for postgres db - {Message}", ex.Message);
+                Log.Logger.Information($"Waiting for postgres db - {ex.Message}");
             }
         }
         throw new Exception("Failed to connect to database.");

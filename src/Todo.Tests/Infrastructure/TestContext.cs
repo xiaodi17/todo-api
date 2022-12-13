@@ -14,25 +14,19 @@ public class TestContext : IAsyncDisposable
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly IDisposable _logContext;
     private readonly TodoApiHost _todoApiHost;
-    private readonly PostgresDatabase _todoDatabase;
 
     public TestContext()
     {
         _cancellationTokenSource = new CancellationTokenSource();
         var settings = GetSettings();
 
-        _todoDatabase = new PostgresDatabase(settings);
+        TodoDatabase = new PostgresDatabase(settings);
         _todoApiHost = new TodoApiHost(settings);
         Client = _todoApiHost.Client;
     }
 
-    public async Task Setup()
-    {
-        await _todoDatabase.Setup(_cancellationTokenSource.Token);
-        // await _todoApiHost.Setup(_cancellationTokenSource.Token);
-    }
-    
     public HttpClient Client { get; }
+    public PostgresDatabase TodoDatabase { get; }
 
     private Dictionary<string, string> GetSettings()
     {
@@ -55,7 +49,9 @@ public class TestContext : IAsyncDisposable
             ["TestId"] = testId,
             ["TestName"] = testName,
             ["DatabaseHost"] = config.GetValue<string>("DatabaseHost"),
-            ["DatabaseName"] = $"db_{testId}",
+            ["DatabaseName"] = $"todo_{testId}",
+            // ["DatabaseHost"] = TodoDatabase.Host,
+            // ["DatabaseName"] = TodoDatabase.DatabaseName,
             ["DatabasePort"] = "5432",
             ["DatabaseUsername"] = "postgres",
             ["DatabasePassword"] = "123456",
@@ -67,6 +63,6 @@ public class TestContext : IAsyncDisposable
     
     public async ValueTask DisposeAsync()
     {
-        await _todoDatabase.DisposeAsync();
+        await TodoDatabase.DisposeAsync();
     }
 }
