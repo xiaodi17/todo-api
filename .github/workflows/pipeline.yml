@@ -5,7 +5,7 @@ on: [push]
 jobs:
   set-env:
     name: Set environment variables
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout out code
         uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
   build:
     name: Build and Test
     needs: [set-env]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout out code
         uses: actions/checkout@v3

@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  tests:
+    container_name: tests
+    build:
+      context: .
+      dockerfile: tests.dockerfile
+    environment:
+      - IntegrationTestEnvironment=Docker
+    depends_on:
+      - database
