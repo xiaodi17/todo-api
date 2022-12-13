@@ -62,4 +62,11 @@ public class TodoController : ControllerBase
 
         return Created($"todo/{todoItem.Id}", todoItem);
     }
+    
+    [HttpGet("healthcheck")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult> Get()
+    {
+        return Ok();
+    }
 }
