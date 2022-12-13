@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -13,30 +14,22 @@ namespace Todo.Tests.Infrastructure;
 
 public class TodoApiHost
 {
-    private readonly IHost _host;
+    //private readonly IHost _host;
 
     public TodoApiHost(Dictionary<string, string> settings)
     {
         var port = GetNextAvailablePort();
-        var args = new[] {"--urls", $"http://0.0.0.0:{port}", "--environment", "Local"};
-        Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((context, configuration) => { configuration.AddInMemoryCollection(settings); })
-            .Build()
-            .RunAsync();
-
-        Client = new HttpClient {BaseAddress = new Uri($"http://localhost:{port}")};
-        Client.DefaultRequestHeaders.Add("traceparent", settings["TestName"]);
-        Client.DefaultRequestHeaders.Add("SystemId", "Tests");
+        settings.Add("urls", $"http://0.0.0.0:{port}");
+        settings.Add("environment", "Local");
+        
+        var application = new TodoApiApplication(settings);
+        Client = application.CreateClient(new WebApplicationFactoryClientOptions()
+        {
+            BaseAddress = new Uri($"http://localhost:{port}")
+        });
         WaitForApiAsync();
     }
-
     public HttpClient Client { get; }
-
-    // public async Task Setup(CancellationToken cancellationToken)
-    // {
-    //     //var _ = _host.RunAsync(cancellationToken);
-    //      WaitForApiAsync(cancellationToken);
-    // }
 
     private void WaitForApiAsync()
     {
