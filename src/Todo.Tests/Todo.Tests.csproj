@@ -24,14 +24,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="appSettings.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="appSettings.*.json">
-            <DependentUpon>appSettings.json</DependentUpon>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+    <Content Include="appSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appSettings.*.json">
+      <DependentUpon>appSettings.json</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Todo.Api\Todo.Api.csproj" />

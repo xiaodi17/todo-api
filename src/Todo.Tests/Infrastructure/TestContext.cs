@@ -11,13 +11,10 @@ namespace Todo.Tests.Infrastructure;
 
 public class TestContext : IAsyncDisposable
 {
-    private readonly CancellationTokenSource _cancellationTokenSource;
-    private readonly IDisposable _logContext;
     private readonly TodoApiHost _todoApiHost;
 
     public TestContext()
     {
-        _cancellationTokenSource = new CancellationTokenSource();
         var settings = GetSettings();
 
         TodoDatabase = new PostgresDatabase(settings);
@@ -30,10 +27,11 @@ public class TestContext : IAsyncDisposable
 
     private Dictionary<string, string> GetSettings()
     {
+        var environment = Environment.GetEnvironmentVariable("IntegrationTestEnvironment");
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appSettings.json")
-            .AddJsonFile($"appSettings.{GetEnvironment()}.json", true, false)
+            .AddJsonFile($"appSettings.{environment}.json", true, false)
             .Build();
 
         var stackTrace = new StackTrace();
