@@ -27,6 +27,7 @@ public class TodoApiHost
         {
             BaseAddress = new Uri($"http://localhost:{port}")
         });
+        Client.DefaultRequestHeaders.Add("SystemId", "test client");
         WaitForApiAsync();
     }
     public HttpClient Client { get; }
