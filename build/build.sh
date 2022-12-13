@@ -21,23 +21,13 @@ project="todo-api"
 cleanup
 
 echo "Running the tests..."
-# docker-compose -f ../docker-compose.yml -f ../docker-compose.tests.yml pull
-# docker-compose \
-#   -p $project \
-#   -f ../docker-compose.yml \
-#   -f ../docker-compose.tests.yml \
-#   up \
-#   --force-recreate --remove-orphans \
-#   --exit-code-from tests \
-#   --abort-on-container-exit \
-#   tests
-docker-compose -f docker-compose.yml -f docker-compose.tests.yml pull
+docker-compose -f ../docker-compose.yml -f ../docker-compose.tests.yml pull
 docker-compose \
   -p $project \
-  -f docker-compose.yml \
-  -f docker-compose.tests.yml \
+  -f ../docker-compose.yml \
+  -f ../docker-compose.tests.yml \
   up \
-  --force-recreate --remove-orphans \
+  --build --force-recreate --remove-orphans \
   --exit-code-from tests \
   --abort-on-container-exit \
   tests
