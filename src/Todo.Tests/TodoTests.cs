@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -23,11 +22,11 @@ public class TodoTests
             Name = "Play",
             IsComplete = true
         };
-        
-        await testContext.Client.PostAsJsonAsync($"/todoitems", request);
-        
+
+        await testContext.Client.PostAsJsonAsync("/todoitems", request);
+
         // Act
-        var response = await testContext.Client.GetAsync($"/todoitems");
+        var response = await testContext.Client.GetAsync("/todoitems");
         var todoItems = await response.Content.ReadAsAsync<IEnumerable<TodoItem>>();
 
         // Assert
@@ -37,7 +36,7 @@ public class TodoTests
         todoItem.Name.Should().Be("Play");
         todoItem.IsComplete.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task GivenAddTodoItem_ThenItemShouldBeSavedInDb()
     {
@@ -50,9 +49,9 @@ public class TodoTests
             Name = "Play",
             IsComplete = true
         };
-        var response = await testContext.Client.PostAsJsonAsync($"/todoitems", request);
+        var response = await testContext.Client.PostAsJsonAsync("/todoitems", request);
         var todoItem = await response.Content.ReadAsAsync<TodoItem>();
-        
+
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         todoItem.Name.Should().Be("Play");

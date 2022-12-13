@@ -50,8 +50,6 @@ public class TestContext : IAsyncDisposable
             ["TestName"] = testName,
             ["DatabaseHost"] = config.GetValue<string>("DatabaseHost"),
             ["DatabaseName"] = $"todo_{testId}",
-            // ["DatabaseHost"] = TodoDatabase.Host,
-            // ["DatabaseName"] = TodoDatabase.DatabaseName,
             ["DatabasePort"] = "5432",
             ["DatabaseUsername"] = "postgres",
             ["DatabasePassword"] = "123456",

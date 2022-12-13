@@ -4,10 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Todo.Tests.Infrastructure;
@@ -21,35 +18,31 @@ public class TodoApiHost
         var port = GetNextAvailablePort();
         settings.Add("urls", $"http://0.0.0.0:{port}");
         settings.Add("environment", "Local");
-        
+
         var application = new TodoApiApplication(settings);
-        Client = application.CreateClient(new WebApplicationFactoryClientOptions()
+        Client = application.CreateClient(new WebApplicationFactoryClientOptions
         {
             BaseAddress = new Uri($"http://localhost:{port}")
         });
         Client.DefaultRequestHeaders.Add("SystemId", "test client");
         WaitForApiAsync();
     }
+
     public HttpClient Client { get; }
 
     private void WaitForApiAsync()
     {
         for (var _ = 0; _ < 20; _++)
-        {
             try
             {
                 Thread.Sleep(1000);
                 var response = Client.GetAsync("/healthcheck").Result;
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    return;
-                }
+                if (response.StatusCode == HttpStatusCode.OK) return;
             }
             catch (Exception ex)
             {
                 Log.Logger.Information($"Waiting for API - {ex.Message}");
             }
-        }
 
         throw new Exception("Failed to connect to API.");
     }
