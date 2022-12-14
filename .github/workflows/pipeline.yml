@@ -41,8 +41,3 @@ jobs:
           chmod +x ./build.sh
           ./build.sh
         working-directory: ./build
-        env:
-          GIT_SHA: ${{ github.sha }}
-          VERSION: ${{ format('2.0.1.{0}', github.run_number) }}
-          PROJECT: ${{ needs.set-env.outputs.project }}
-          API_PROJECT: ${{ needs.set-env.outputs.api_project }}
