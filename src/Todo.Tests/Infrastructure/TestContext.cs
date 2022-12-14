@@ -29,7 +29,7 @@ public class TestContext : IAsyncDisposable
         var environment = GetEnvironment();
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appSettings.json")
+            .AddJsonFile("appSettings.json", true, false)
             .AddJsonFile($"appSettings.{environment}.json", true, false)
             .Build();
 
