@@ -20,18 +20,22 @@ public class TodoApiApplication : WebApplicationFactory<Program>
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureAppConfiguration(
-            (context, configuration) => { configuration.AddInMemoryCollection(_settings); });
+            (context, configuration) =>
+            {
+                configuration.Sources.Clear();
+                configuration.AddInMemoryCollection(_settings);
+            });
 
         return base.CreateHost(builder);
     }
-    
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder.ConfigureTestServices(services => 
-        {
-            // We can further customize our application setup here.
-            services.AddSingleton(
-                DatabaseConfiguration.Create(new ConfigurationBuilder().AddInMemoryCollection(_settings).Build()));
-        });
-    }
+
+    // protected override void ConfigureWebHost(IWebHostBuilder builder)
+    // {
+    //     builder.ConfigureTestServices(services =>
+    //     {
+    //         // We can further customize our application setup here.
+    //         services.AddSingleton(
+    //             DatabaseConfiguration.Create(new ConfigurationBuilder().AddInMemoryCollection(_settings).Build()));
+    //     });
+    // }
 }
