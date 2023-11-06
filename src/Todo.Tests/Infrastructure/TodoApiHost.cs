@@ -57,6 +57,6 @@ public class TodoApiHost
         // a given port, and a new test is able to bind to the same port due to port
         // reuse being enabled by default by the OS.
         socket.Bind(new IPEndPoint(IPAddress.Loopback, 0));
-        return ((IPEndPoint) socket.LocalEndPoint)!.Port;
+        return ((IPEndPoint)socket.LocalEndPoint)!.Port;
     }
 }

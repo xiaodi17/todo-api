@@ -17,25 +17,38 @@ public class TodoApiApplication : WebApplicationFactory<Program>
         _settings = settings;
     }
 
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        builder.ConfigureAppConfiguration(
-            (context, configuration) =>
-            {
-                configuration.Sources.Clear();
-                configuration.AddInMemoryCollection(_settings);
-            });
-
-        return base.CreateHost(builder);
-    }
-
-    // protected override void ConfigureWebHost(IWebHostBuilder builder)
+    // protected override IHost CreateHost(IHostBuilder builder)
     // {
-    //     builder.ConfigureTestServices(services =>
-    //     {
-    //         // We can further customize our application setup here.
-    //         services.AddSingleton(
-    //             DatabaseConfiguration.Create(new ConfigurationBuilder().AddInMemoryCollection(_settings).Build()));
-    //     });
+    //     builder.ConfigureAppConfiguration(
+    //         (context, configuration) =>
+    //         {
+    //             configuration.AddInMemoryCollection(_settings);
+    //         });
+
+    //     return base.CreateHost(builder);
     // }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        // builder.ConfigureTestServices(services =>
+        // {
+        //     // We can further customize our application setup here.
+        //     services.AddSingleton(
+        //         DatabaseConfiguration.Create(new ConfigurationBuilder().AddInMemoryCollection(_settings).Build()));
+        // });
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(_settings)
+            .Build();
+
+        builder
+            // This configuration is used during the creation of the application
+            // (e.g. BEFORE WebApplication.CreateBuilder(args) is called in Program.cs).
+            .UseConfiguration(configuration)
+            .ConfigureAppConfiguration(configurationBuilder =>
+            {
+                // This overrides configuration settings that were added as part 
+                // of building the Host (e.g. calling WebApplication.CreateBuilder(args)).
+                configurationBuilder.AddInMemoryCollection(_settings);
+            });
+    }
 }
