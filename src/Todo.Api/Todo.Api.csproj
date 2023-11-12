@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -18,13 +18,14 @@
         <PackageReference Include="dbup-postgresql" Version="5.0.8" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
         <PackageReference Include="Npgsql" Version="7.0.0" />
+        <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Serilog.Expressions" Version="3.4.2-dev-00119" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include ="..\Todo.Tests\Todo.Tests.csproj"/>
+        <InternalsVisibleTo Include="..\Todo.Tests\Todo.Tests.csproj" />
     </ItemGroup>
 
 </Project>

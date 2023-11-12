@@ -2,21 +2,20 @@ using System.Data.Common;
 using System.Reflection;
 using DbUp;
 using Npgsql;
-using ILogger = Serilog.ILogger;
 
 namespace Todo.Api.Databases;
 
 public class TodoDatabase
 {
     private readonly DatabaseConfiguration _config;
-    private readonly ILogger _logger;
+    private readonly ILogger<TodoDatabase> _logger;
 
-    public TodoDatabase(DatabaseConfiguration config, ILogger logger)
+    public TodoDatabase(DatabaseConfiguration config, ILogger<TodoDatabase> logger)
     {
         _config = config;
         _logger = logger;
     }
-    
+
     public async Task<DbConnection> CreateAndOpenConnection(CancellationToken stoppingToken = default)
     {
         var connection = new NpgsqlConnection(_config.ConnectionString);
@@ -36,23 +35,23 @@ public class TodoDatabase
         }
         catch (Exception ex)
         {
-            _logger.Information(ex, "Exception while executing transaction - rolling back");
+            _logger.LogInformation(ex, "Exception while executing transaction - rolling back");
             try
             {
                 await transaction.RollbackAsync(cancellationToken);
             }
             catch (Exception ex2)
             {
-                _logger.Error(ex2, "Error rolling back transaction");
+                _logger.LogError(ex2, "Error rolling back transaction");
             }
 
             throw;
         }
     }
-    
+
     public void UpgradeIfNecessary()
     {
-        _logger.Information("Upgrading Database");
+        _logger.LogInformation("Upgrading Database");
         var upgrader = DeployChanges.To
             .PostgresqlDatabase(_config.ConnectionString)
             .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
@@ -62,7 +61,7 @@ public class TodoDatabase
         var result = upgrader.PerformUpgrade();
         if (!result.Successful)
         {
-            _logger.Error(result.Error, "Failed to upgrade the database");
+            _logger.LogError(result.Error, "Failed to upgrade the database");
         }
     }
 }

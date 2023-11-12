@@ -21,12 +21,11 @@ public class TodoController : ControllerBase
              Name = "Study"
          }
     };
-    private readonly ILogger _logger;
+
     private readonly TodoService _todoService;
 
-    public TodoController(ILogger logger, TodoService todoService)
+    public TodoController(TodoService todoService)
     {
-        _logger = logger;
         _todoService = todoService;
     }
 
@@ -41,7 +40,7 @@ public class TodoController : ControllerBase
         var response = await _todoService.Get(query);
         return response;
     }
-    
+
     [HttpPost("todoitems")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,7 +61,7 @@ public class TodoController : ControllerBase
 
         return Created($"todo/{todoItem.Id}", todoItem);
     }
-    
+
     [HttpGet("healthcheck")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> Get()

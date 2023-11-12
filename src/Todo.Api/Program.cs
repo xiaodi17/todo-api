@@ -6,13 +6,18 @@ using Todo.Api.Databases;
 using Todo.Api.Features.Todo;
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .Enrich.FromLogContext()
-    .WriteTo.Console(new JsonFormatter())
-    .CreateLogger();
+        .WriteTo.Console(new JsonFormatter())
+        .MinimumLevel.Information()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .Enrich.WithProperty("Version", typeof(Program).Assembly.GetName().Version!.ToString())
+        .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Define using serilog here
+builder.Host.UseSerilog();
+
+Log.Logger.Information("Starting up");
 
 // Add services to the container.
 
@@ -36,6 +41,7 @@ app.Services
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
@@ -49,5 +55,5 @@ app.Run();
 
 public partial class Program
 {
-    
+
 }
