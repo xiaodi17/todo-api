@@ -1,17 +1,20 @@
 # todo-api
 
-A containerized Web API built with .net 6, follows CI/CD using GitHub Actions
+A containerized Web API built with .net 7, follows CI/CD using GitHub Actions
 
 ## Local Run
+
 To run locally start up the dependent services using...
+
 ```
 docker-compose up -d
 ```
+
 Then run the app in your preferred IDE or using the cli...
+
 ```
 dotnet run --project ./src/Todo.Api
 ```
-
 
 ## Run tests in docker
 
